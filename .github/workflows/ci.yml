@@ -1,0 +1,26 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: |
+          pip install -e ".[dev]"
+          python -m nltk.downloader -d $HOME/nltk_data vader_lexicon punkt
+          python -m spacy download en_core_web_sm
+      - name: Lint
+        run: ruff check .
+      - name: Tests
+        env:
+          NLTK_DATA: ${{ env.HOME }}/nltk_data
+        run: pytest -q

@@ -1,0 +1,10 @@
+.venv/
+.git/
+__pycache__/
+*.pyc
+*.egg-info/
+docs/
+.github/
+k8s/
+data/images/*.png
+*.pdf

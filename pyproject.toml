@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kalbii"
+version = "1.0.0"
+description = "Encrypted Multi-Modal Intelligence System"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.115.0",
+    "uvicorn[standard]==0.30.6",
+    "pydantic==2.9.2",
+    "pydantic-settings==2.5.2",
+    "python-multipart==0.0.12",
+
+    "celery==5.4.0",
+    "redis==5.0.8",
+
+    "pymongo==4.8.0",
+    "motor==3.5.1",
+
+    "nltk==3.9.1",
+    "spacy==3.7.5",
+    "rapidfuzz==3.9.7",
+    "PyYAML==6.0.2",
+
+    "opencv-python-headless==4.10.0.84",
+    "numpy==1.26.4",
+    "scikit-learn==1.5.2",
+    "xgboost==2.1.1",
+    "joblib==1.4.2",
+
+    "pandas>=2.0",
+    "structlog==24.4.0",
+    "python-dotenv==1.0.1",
+    "httpx==0.27.2",
+]
+
+[project.optional-dependencies]
+dashboard = ["streamlit==1.39.0", "plotly==5.24.1", "pandas==2.2.3"]
+dev = [
+    "pytest==8.3.3",
+    "pytest-asyncio==0.24.0",
+    "mongomock==4.2.0.post1",
+    "fakeredis==2.24.1",
+    "ruff==0.6.9",
+]
+heavy = [
+    "transformers==4.44.2",
+    "torch==2.4.1",
+    "sentence-transformers==3.1.1",
+    "keybert==0.8.5",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+asyncio_mode = "auto"

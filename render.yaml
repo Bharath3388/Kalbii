@@ -1,0 +1,42 @@
+# Render Blueprint — deploys API + dashboard (free tier)
+# Worker + Redis are optional (paid tier) — API uses KMI_FORCE_SYNC=1 fallback.
+# Mongo lives in MongoDB Atlas (free M0). Set MONGO_URI in Render dashboard secrets.
+services:
+  - type: web
+    name: kalbii-api
+    runtime: docker
+    dockerfilePath: docker/api.Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      - key: KMI_PASSPHRASE
+        sync: false
+      - key: KMI_API_KEYS
+        sync: false
+      - key: MONGO_URI
+        sync: false
+      - key: MONGO_DB
+        value: kalbii
+      - key: KMI_FORCE_SYNC
+        value: "1"
+      - key: DATA_DIR
+        value: /tmp/images
+      - key: CV_BACKEND
+        value: opencv
+      - key: NLP_BACKEND
+        value: vader
+      - key: REDIS_URL
+        value: redis://localhost:6379/0
+
+  - type: web
+    name: kalbii-dashboard
+    runtime: docker
+    dockerfilePath: docker/dashboard.Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: MONGO_DB
+        value: kalbii

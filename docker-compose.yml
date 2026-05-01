@@ -1,0 +1,41 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongo_data:/data/db]
+
+  api:
+    build: { context: ., dockerfile: docker/api.Dockerfile }
+    env_file: .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - REDIS_URL=redis://redis:6379/0
+      - DATA_DIR=/data/images
+    ports: ["8000:8000"]
+    volumes: ["./data/images:/data/images"]
+    depends_on: [redis, mongo]
+
+  worker:
+    build: { context: ., dockerfile: docker/worker.Dockerfile }
+    env_file: .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - REDIS_URL=redis://redis:6379/0
+      - DATA_DIR=/data/images
+    volumes: ["./data/images:/data/images"]
+    depends_on: [redis, mongo]
+
+  dashboard:
+    build: { context: ., dockerfile: docker/dashboard.Dockerfile }
+    env_file: .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+    ports: ["8501:8501"]
+    depends_on: [mongo]
+
+volumes:
+  mongo_data:

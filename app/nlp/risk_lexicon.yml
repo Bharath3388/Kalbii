@@ -1,0 +1,37 @@
+critical:
+  - explosion
+  - fire
+  - fatal
+  - fatality
+  - leak
+  - hazard
+  - urgent
+  - emergency
+  - breach
+  - toxic
+high:
+  - crack
+  - fracture
+  - defect
+  - malfunction
+  - failure
+  - broken
+  - corrosion
+  - overheat
+  - burn
+  - rupture
+medium:
+  - delay
+  - anomaly
+  - irregular
+  - vibration
+  - noise
+  - warning
+  - suspicious
+  - leakage
+low:
+  - minor
+  - scratch
+  - dust
+  - cosmetic
+  - smudge
