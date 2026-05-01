@@ -3,7 +3,7 @@ import { FiActivity, FiRefreshCw } from 'react-icons/fi';
 import { getRecords, RecordData } from '../api';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
-const COLORS: Record<string, string> = { LOW: '#00b894', MEDIUM: '#fdcb6e', HIGH: '#e17055' };
+const COLORS: Record<string, string> = { LOW: '#10b981', MEDIUM: '#f59e0b', HIGH: '#ef4444' };
 
 export default function HistoryPage() {
   const [records, setRecords] = useState<RecordData[]>([]);
@@ -44,9 +44,9 @@ export default function HistoryPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>
-          <FiActivity style={{ marginRight: 8, verticalAlign: -2 }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28 }}>
+        <h1 className="page-heading">
+          <FiActivity />
           Analysis History
         </h1>
         <button className="btn btn-outline" onClick={load} disabled={loading}>
@@ -92,11 +92,11 @@ export default function HistoryPage() {
             <div className="card-title">Score Distribution</div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={buckets}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2e3347" />
-                <XAxis dataKey="range" tick={{ fill: '#9198b0', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#9198b0', fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: '#1a1d27', border: '1px solid #2e3347' }} />
-                <Bar dataKey="count" fill="#6c5ce7" radius={[4, 4, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#2a2a35" />
+                <XAxis dataKey="range" tick={{ fill: '#8888a0', fontSize: 11 }} />
+                <YAxis tick={{ fill: '#8888a0', fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: '#131316', border: '1px solid #2a2a35', borderRadius: 8 }} />
+                <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

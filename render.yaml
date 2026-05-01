@@ -30,6 +30,18 @@ services:
         value: redis://localhost:6379/0
 
   - type: web
+    name: kalbii-frontend
+    runtime: docker
+    dockerfilePath: docker/frontend.Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        value: https://kalbii-api.onrender.com
+      - key: VITE_API_KEY
+        value: demo-key
+
+  - type: web
     name: kalbii-dashboard
     runtime: docker
     dockerfilePath: docker/dashboard.Dockerfile

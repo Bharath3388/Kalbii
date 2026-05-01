@@ -4,9 +4,9 @@ import { encrypt, ingest, getResult, RecordData } from '../api';
 import ResultPanel from '../components/ResultPanel';
 
 const CV_OPTIONS = [
-  { id: 'opencv', title: 'OpenCV', desc: 'Statistical (Laplacian, edge, color)' },
-  { id: 'autoencoder', title: 'Autoencoder', desc: 'PyTorch Conv-AE (advanced)' },
-  { id: 'clip', title: 'CLIP', desc: 'Zero-shot VIT (bonus)' },
+  { id: 'opencv', title: 'OpenCV' },
+  { id: 'autoencoder', title: 'Autoencoder' },
+  { id: 'clip', title: 'CLIP' },
 ] as const;
 
 export default function AnalyzePage() {
@@ -87,15 +87,15 @@ export default function AnalyzePage() {
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>
-        <FiShield style={{ marginRight: 8, verticalAlign: -2 }} />
+      <h1 className="page-heading">
+        <FiShield />
         Risk Analysis
       </h1>
-      <p style={{ color: 'var(--text2)', marginBottom: 24, fontSize: 14 }}>
+      <p className="page-subtitle">
         Submit text and/or an image. Data is encrypted, processed through NLP + CV pipelines, and scored by the ML model.
       </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="analyze-grid">
         {/* Left: inputs */}
         <div className="card">
           <div className="card-title"><FiFileText style={{ marginRight: 6 }} /> Input</div>
@@ -134,7 +134,6 @@ export default function AnalyzePage() {
                   onClick={() => setCvBackend(o.id)}
                 >
                   <div className="cv-option-title">{o.title}</div>
-                  <div className="cv-option-desc">{o.desc}</div>
                 </div>
               ))}
             </div>
@@ -145,8 +144,8 @@ export default function AnalyzePage() {
           </button>
 
           {error && (
-            <div style={{ color: 'var(--red)', marginTop: 12, fontSize: 13 }}>
-              <FiAlertTriangle style={{ marginRight: 4 }} /> {error}
+            <div style={{ color: 'var(--red)', marginTop: 12, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <FiAlertTriangle /> {error}
             </div>
           )}
         </div>
@@ -156,11 +155,9 @@ export default function AnalyzePage() {
           {result ? (
             <ResultPanel data={result} />
           ) : (
-            <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, color: 'var(--text2)' }}>
-              <div style={{ textAlign: 'center' }}>
-                <FiEye style={{ fontSize: 48, marginBottom: 12 }} />
-                <div>Results will appear here</div>
-              </div>
+            <div className="card empty-state">
+              <FiEye />
+              <span>Results will appear here</span>
             </div>
           )}
         </div>
