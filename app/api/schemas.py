@@ -16,6 +16,8 @@ class EncryptOut(BaseModel):
 class IngestIn(BaseModel):
     ciphertext_text: str = Field(..., description="Cipher token from /encrypt")
     ciphertext_image: Optional[str] = Field(None, description="Cipher token for image bytes")
+    cv_backend: Optional[str] = Field(None, pattern="^(opencv|autoencoder|clip)$",
+                                       description="CV backend override: opencv, autoencoder, or clip")
     metadata: Optional[Dict[str, Any]] = None
 
 

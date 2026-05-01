@@ -26,6 +26,7 @@ def process_payload_sync(
     ciphertext_text: str,
     ciphertext_image: str,
     metadata: Dict[str, Any] | None = None,
+    cv_backend: str | None = None,
 ) -> Dict[str, Any]:
     settings = get_settings()
     cipher = CustomCipher.from_str(settings.KMI_PASSPHRASE)
@@ -37,8 +38,16 @@ def process_payload_sync(
     # Stage 2: NLP
     nlp_out = nlp_analyze(decrypted_text)
 
-    # Stage 3: CV
+    # Stage 3: CV (allow per-request backend override)
+    import os
+    old_cv = os.environ.get("CV_BACKEND")
+    if cv_backend:
+        os.environ["CV_BACKEND"] = cv_backend
     cv_out = cv_analyze(image_bytes, save_dir=settings.DATA_DIR)
+    if old_cv is not None:
+        os.environ["CV_BACKEND"] = old_cv
+    elif cv_backend:
+        os.environ.pop("CV_BACKEND", None)
 
     # Stage 4: risk fusion
     risk_out = risk_predict(nlp_out, cv_out)

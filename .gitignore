@@ -10,3 +10,7 @@ data/images/*
 dist/
 build/
 app/risk/artifacts/*.joblib
+
+# Vite cache
+.vite/
+frontend/node_modules/

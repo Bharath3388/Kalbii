@@ -37,18 +37,18 @@ def analyze(image_bytes: bytes, save_dir: str) -> Dict[str, Any]:
 
     if backend == "autoencoder":
         try:
-            from .autoencoder.model import score_autoencoder        # type: ignore
+            from .autoencoder.model import score_autoencoder
             score, heat = score_autoencoder(img)
-            method = "autoencoder_mse"
+            method = "autoencoder_pca_mse"
         except Exception as e:                                       # noqa: BLE001
-            method = f"autoencoder_unavailable_fallback_opencv ({e.__class__.__name__})"
+            method = f"autoencoder_fallback_opencv ({e.__class__.__name__}: {e})"
     elif backend == "clip":
         try:
-            from .clip_zeroshot import score_clip                   # type: ignore
+            from .clip_zeroshot import score_clip
             score, heat = score_clip(img)
-            method = "clip_zeroshot"
+            method = "clip_lbp_jsd"
         except Exception as e:                                       # noqa: BLE001
-            method = f"clip_unavailable_fallback_opencv ({e.__class__.__name__})"
+            method = f"clip_fallback_opencv ({e.__class__.__name__}: {e})"
 
     cv2.imwrite(heatmap_path, heat)
 

@@ -91,7 +91,8 @@ def ingest(payload: IngestIn):
     # synchronous fallback
     try:
         process_payload_sync(job_id, payload.ciphertext_text,
-                             payload.ciphertext_image or "", payload.metadata or {})
+                             payload.ciphertext_image or "", payload.metadata or {},
+                             cv_backend=payload.cv_backend)
     except ValueError as e:
         raise HTTPException(400, f"processing failed: {e}")
     return IngestOut(job_id=job_id, status="done", status_url=f"/result/{job_id}")
