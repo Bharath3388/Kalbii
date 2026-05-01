@@ -100,10 +100,7 @@ def ingest(payload: IngestIn):
 
 @app.get("/result/{job_id}", response_model=RecordOut, dependencies=[Depends(api_key_auth)])
 def get_result(job_id: str):
-    try:
-        rec = RecordsRepo().by_job(job_id)
-    except Exception:  # noqa: BLE001
-        rec = None
+    rec = RecordsRepo().by_job(job_id)
     if not rec:
         raise HTTPException(404, "unknown or not ready")
     rec["created_at"] = rec.get("created_at").isoformat() if rec.get("created_at") else None
@@ -113,10 +110,7 @@ def get_result(job_id: str):
 @app.get("/records", dependencies=[Depends(api_key_auth)])
 def list_records(limit: int = Query(50, ge=1, le=500),
                  risk_label: Optional[str] = Query(None, pattern="^(LOW|MEDIUM|HIGH)$")):
-    try:
-        items = RecordsRepo().recent(limit=limit, risk_label=risk_label)
-    except Exception:  # noqa: BLE001
-        items = []
+    items = RecordsRepo().recent(limit=limit, risk_label=risk_label)
     for it in items:
         ca = it.get("created_at")
         if ca and not isinstance(ca, str):
