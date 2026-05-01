@@ -13,7 +13,7 @@ COPY . /app/
 RUN pip install .
 
 RUN python -m nltk.downloader -d /usr/share/nltk_data vader_lexicon punkt && \
-    python -m spacy download en_core_web_sm
+    python -m spacy download en_core_web_md
 
 RUN python -c "from app.risk.train import train; train(save=True)"
 

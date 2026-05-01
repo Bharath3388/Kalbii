@@ -14,7 +14,7 @@ RUN pip install .
 
 # fetch lightweight NLP assets at build time so cold start is fast
 RUN python -m nltk.downloader -d /usr/share/nltk_data vader_lexicon punkt && \
-    python -m spacy download en_core_web_sm
+    python -m spacy download en_core_web_md
 
 # Pre-train risk model artifact
 RUN python -c "from app.risk.train import train; train(save=True)"
