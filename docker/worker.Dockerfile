@@ -10,10 +10,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 COPY . /app/
+# Install CPU-only PyTorch first
+RUN pip install torch --index-url https://download.pytorch.org/whl/cpu
 RUN pip install .
 
 RUN python -m nltk.downloader -d /usr/share/nltk_data vader_lexicon punkt && \
-    python -m spacy download en_core_web_md
+    python -m spacy download en_core_web_md && \
+    python -c "from transformers import pipeline; pipeline('text-classification', model='distilbert-base-uncased-finetuned-sst-2-english')"
 
 RUN python -c "from app.risk.train import train; train(save=True)"
 

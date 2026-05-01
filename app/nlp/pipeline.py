@@ -27,6 +27,10 @@ RISK_SEEDS: Dict[str, List[str]] = {
 WEIGHTS = {"critical": 1.0, "high": 0.7, "medium": 0.4, "low": 0.15}
 SIM_THRESHOLD = 0.55   # cosine similarity threshold for a "hit"
 
+# DistilBERT model used as the default context-aware sentiment backend.
+# Understands context ("exceeded safe limits" → NEGATIVE) unlike VADER.
+_DISTILBERT_MODEL = "distilbert-base-uncased-finetuned-sst-2-english"
+
 
 # ----------------------- sentiment backends ----------------------------
 @lru_cache(maxsize=1)
@@ -40,26 +44,30 @@ def _vader():
 
 
 @lru_cache(maxsize=1)
-def _hf_sentiment():
+def _distilbert():
     from transformers import pipeline as hf_pipeline       # type: ignore
     return hf_pipeline(
-        "sentiment-analysis",
-        model="distilbert-base-uncased-finetuned-sst-2-english",
+        "text-classification",
+        model=_DISTILBERT_MODEL,
+        truncation=True,
+        max_length=512,
     )
 
 
 def _sentiment(text: str) -> Dict[str, Any]:
-    backend = os.getenv("NLP_BACKEND", "vader").lower()
-    if backend == "transformers":
+    backend = os.getenv("NLP_BACKEND", "distilbert").lower()
+    if backend != "vader":
         try:
-            res = _hf_sentiment()(text[:512])[0]
-            return {"label": res["label"], "score": float(res["score"])}
-        except Exception:                                   # graceful fallback
+            res = _distilbert()(text[:512])[0]
+            label = res["label"]          # "POSITIVE" or "NEGATIVE"
+            score = round(float(res["score"]), 4)
+            return {"label": label, "score": score, "backend": "distilbert"}
+        except Exception:                 # graceful fallback to VADER
             pass
     s = _vader().polarity_scores(text)
     label = "POSITIVE" if s["compound"] >= 0.05 else "NEGATIVE" if s["compound"] <= -0.05 else "NEUTRAL"
     score = abs(s["compound"]) if label != "NEUTRAL" else 1 - abs(s["compound"])
-    return {"label": label, "score": round(float(score), 4), "vader": s}
+    return {"label": label, "score": round(float(score), 4), "backend": "vader"}
 
 
 # ----------------------- spaCy lazy loader -----------------------------
