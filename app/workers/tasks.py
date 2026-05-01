@@ -67,7 +67,10 @@ def process_payload_sync(
         "created_at": dt.datetime.utcnow(),
         "status": "done",
     }
-    RecordsRepo().insert(record)
+    try:
+        RecordsRepo().insert(record)
+    except Exception:  # noqa: BLE001
+        pass  # Mongo unavailable — return result without persisting
     record["_id"] = record.get("_id") or job_id
     return record
 
